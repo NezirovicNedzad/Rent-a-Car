@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package home;
-
+package mainPages;
+import components.SideMenu;
 import db.DBConnection;
+import insertPages.MakeAContract;
+import java.awt.BorderLayout;
 import session.Session;
 
 /**
@@ -12,7 +14,9 @@ import session.Session;
  * @author Administrator
  */
 import java.sql.*;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import session.SelectedCar;
 public class HomePage extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(HomePage.class.getName());
@@ -48,19 +52,17 @@ public class HomePage extends javax.swing.JFrame {
             model.setRowCount(0);
 
             while(rs.next()) {
-            int statusValue = rs.getInt("Status");
-
-                // Determine the string based on the value
-                String statusText = (statusValue == 0) ? "Slobodan" : "False";
 
                 model.addRow(new Object[]{
+                    rs.getInt("Id"),
                     rs.getString("Model"),
                     rs.getString("Kategorija"),
                     rs.getInt("Godiste"),
+                    rs.getInt("CenaPoDanu"),
                     rs.getInt("Kilometraza"),
                     rs.getString("Boja"),
                     rs.getString("Registracija"),
-                    statusText // Use the converted string here
+                    rs.getString("Status") // Use the converted string here
                 });
             }
 
@@ -83,11 +85,38 @@ public class HomePage extends javax.swing.JFrame {
     }
     public HomePage() {
         initComponents();
+        this.setResizable(false); 
+        this.setLocationRelativeTo(null);
+        SideMenu menu = new SideMenu("Pocetna");
+
+        SideP.setLayout(new BorderLayout());
+        SideP.add(menu, BorderLayout.CENTER);
+
+        SideP.revalidate();
+        SideP.repaint();
+
         initCustomTableStyle();
         centerTableData();
-        Sluzbenik.setText(Session.ime + " " + Session.prezime);
         loadAutomobili();
         
+        btnIznajmi.setEnabled(false);
+        Sluzbenik.setText(Session.ime + " " + Session.prezime);
+        
+        automobili.getSelectionModel().addListSelectionListener(e -> {
+
+            if (!e.getValueIsAdjusting()) {
+
+                int row = automobili.getSelectedRow();
+
+                if (row != -1) {
+
+                    String status = automobili.getValueAt(row, 8).toString();
+
+                    btnIznajmi.setEnabled(status.equals("Slobodan"));
+                }
+            }
+
+        });
     }
 
     /**
@@ -105,10 +134,10 @@ public class HomePage extends javax.swing.JFrame {
         ImeSluzbenika = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         Sluzbenik = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         automobili = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        SideP = new javax.swing.JPanel();
+        btnIznajmi = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,30 +145,26 @@ public class HomePage extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("RENT A CAR");
 
-        jLabel1.setText("HomePage");
-
         jLabel2.setText("Sluzbenik:");
 
         ImeSluzbenika.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         Sluzbenik.setText("jLabel5");
 
-        jLabel5.setText("jLabel5");
-
         automobili.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         automobili.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Model", "Kategorija", "Godiste", "Kilometraza", "Boja", "Registracija", "Status"
+                "Id", "Model", "Kategorija", "Godiste", "CenaPoDanu", "Kilometraza", "Boja", "Registracija", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -147,24 +172,38 @@ public class HomePage extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(automobili);
-        if (automobili.getColumnModel().getColumnCount() > 0) {
-            automobili.getColumnModel().getColumn(0).setHeaderValue("Model");
-            automobili.getColumnModel().getColumn(1).setHeaderValue("Kategorija");
-            automobili.getColumnModel().getColumn(2).setHeaderValue("Godiste");
-            automobili.getColumnModel().getColumn(3).setHeaderValue("Kilometraza");
-            automobili.getColumnModel().getColumn(4).setHeaderValue("Boja");
-            automobili.getColumnModel().getColumn(5).setHeaderValue("Registracija");
-            automobili.getColumnModel().getColumn(6).setHeaderValue("Status");
-        }
 
-        jButton1.setText("Unesi automobil");
+        javax.swing.GroupLayout SidePLayout = new javax.swing.GroupLayout(SideP);
+        SideP.setLayout(SidePLayout);
+        SidePLayout.setHorizontalGroup(
+            SidePLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        SidePLayout.setVerticalGroup(
+            SidePLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 371, Short.MAX_VALUE)
+        );
+
+        btnIznajmi.setText("Iznajmi");
+        btnIznajmi.addActionListener(this::btnIznajmiActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(18, 18, 18)
+                .addComponent(SideP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 769, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(btnIznajmi, javax.swing.GroupLayout.PREFERRED_SIZE, 761, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(80, 80, 80))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(373, 373, 373)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -178,17 +217,9 @@ public class HomePage extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(Sluzbenik, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 769, Short.MAX_VALUE))
-                                .addGap(104, 104, 104)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(132, 132, 132)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -210,15 +241,46 @@ public class HomePage extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(19, 19, 19))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(SideP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(55, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnIznajmi)
+                        .addGap(36, 36, 36))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnIznajmiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIznajmiActionPerformed
+        // TODO add your handling code here:
+        int row = automobili.getSelectedRow();
+        if(row == -1){
+            JOptionPane.showMessageDialog(this, "Izaberite automobil.");
+            return;
+        }
+
+        // Indeksi su sada: Id(0), Model(1), Kategorija(2), Godiste(3), Cena(4), Km(5), Boja(6), Reg(7), Status(8)
+        SelectedCar.Id = Integer.parseInt(automobili.getValueAt(row, 0).toString());
+        SelectedCar.Model = automobili.getValueAt(row, 1).toString();
+        SelectedCar.Kategorija = automobili.getValueAt(row, 2).toString();
+        SelectedCar.Godiste = Integer.parseInt(automobili.getValueAt(row, 3).toString());
+        SelectedCar.CenaPoDanu = Integer.parseInt(automobili.getValueAt(row, 4).toString());
+        SelectedCar.Kilometraza = Integer.parseInt(automobili.getValueAt(row, 5).toString());
+        SelectedCar.Boja = automobili.getValueAt(row, 6).toString();
+        SelectedCar.Registracija = automobili.getValueAt(row, 7).toString();
+        
+        JOptionPane.showMessageDialog(this, 
+            "Iznajmljuje se automobil: " + SelectedCar.Model + " (" + SelectedCar.Registracija + ")", 
+            "Potvrda izbora", 
+            JOptionPane.INFORMATION_MESSAGE);
+
+        MakeAContract contract = new MakeAContract();
+        contract.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnIznajmiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -247,14 +309,14 @@ public class HomePage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ImeSluzbenika;
+    private javax.swing.JPanel SideP;
     private javax.swing.JLabel Sluzbenik;
     private javax.swing.JTable automobili;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnIznajmi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

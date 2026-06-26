@@ -9,7 +9,7 @@ package session;
  * @author Administrator
  */
 public class Session {
-    
+    public static int id;
     public static String ime;
     public static String prezime;
     public static String email;
