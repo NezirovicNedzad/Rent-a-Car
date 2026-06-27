@@ -115,7 +115,6 @@ public class HomePage extends javax.swing.JFrame {
                     btnIznajmi.setEnabled(status.equals("Slobodan"));
                 }
             }
-
         });
     }
 

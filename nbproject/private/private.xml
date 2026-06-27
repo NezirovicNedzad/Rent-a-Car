@@ -7,9 +7,20 @@
             <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/db/DBConnection.java</file>
             <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/rentacar/Login2.png</file>
             <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/login/cropped_circle_image.png</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/login/LoginPage.java</file>
             <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/session/Session.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/home/HomePage.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/login/LoginPage.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/mainPages/HomePage.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/mainPages/CarsPage.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/mainPages/ClientsPage.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/components/SideMenu.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/insertPages/InsertCarsPage.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/components/CustomTable.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/session/SelectedCar.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/insertPages/MakeAContract.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/mainPages/ContractsPage.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/insertPages/FinalizeContractPage.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/insertPages/ExtendContractPage.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/RentACar/src/mainPages/ReceiptsPage.java</file>
         </group>
     </open-files>
 </project-private>

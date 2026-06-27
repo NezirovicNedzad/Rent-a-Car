@@ -7,6 +7,7 @@ package mainPages;
 import components.CustomTable;
 import components.SideMenu;
 import db.DBConnection;
+import insertPages.InsertCarsPage;
 import java.awt.BorderLayout;
 import java.sql.*;
 
@@ -156,6 +157,9 @@ public class CarsPage extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        InsertCarsPage insertCars = new InsertCarsPage();
+        insertCars.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

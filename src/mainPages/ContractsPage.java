@@ -4,8 +4,13 @@
  */
 package mainPages;
 
+import components.CustomTable;
 import components.SideMenu;
+import db.DBConnection;
+import insertPages.ExtendContractPage;
+import insertPages.FinalizeContractPage;
 import java.awt.BorderLayout;
+import java.sql.*;
 
 /**
  *
@@ -14,19 +19,73 @@ import java.awt.BorderLayout;
 public class ContractsPage extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ContractsPage.class.getName());
-
+    private final CustomTable tabelaKomponenta;
     /**
      * Creates new form Contracts
      */
     public ContractsPage() {
         initComponents();
-        this.setSize(1093, 501);
+        this.setSize(1093, 571);
         this.setResizable(false); 
         this.setLocationRelativeTo(null);
         SideMenu menu = new SideMenu("Ugovori");
 
+        finalizujBtn.setEnabled(false);
+        produziBtn.setEnabled(false);
+        
         SideP.setLayout(new BorderLayout());
         SideP.add(menu, BorderLayout.CENTER);
+        // Inicijalizacija tabele sa kolonama
+        String[] kolone = {"Broj Ugovora", "Klijent", "Matični Broj", "Model", "Registracija", "Datum Sklapanja", "Planirani Povratak", "Troškovi", "Status"};
+        tabelaKomponenta = new CustomTable(kolone);
+        TableContainer.setLayout(new BorderLayout());
+        TableContainer.add(tabelaKomponenta, BorderLayout.CENTER);
+
+        // 3. Osvježavanje forme
+        TableContainer.revalidate();
+        TableContainer.repaint();
+        tabelaKomponenta.getTable().getSelectionModel().addListSelectionListener(e -> {
+         if (!e.getValueIsAdjusting()) {
+             int row = tabelaKomponenta.getTable().getSelectedRow();
+             if (row != -1) {
+                 String status = tabelaKomponenta.getTable().getValueAt(row, 8).toString();
+                 produziBtn.setEnabled(status.equals("Aktivan"));
+                 finalizujBtn.setEnabled(status.equals("Aktivan"));
+             }
+         }
+        });
+      
+        loadUgovori(tabelaKomponenta);
+    }
+    
+    private void loadUgovori(CustomTable tableComp) {
+        String sql = "SELECT u.BrojUgovora, k.Ime, k.Prezime, k.Maticni_Broj, a.Model, a.Registracija, " +
+                     "u.DatumSklapanja, u.PlaniraniDatumVracanja, u.TroskoviNajma, u.Status " +
+                     "FROM Ugovori u " +
+                     "JOIN Klijenti k ON u.KlijentID = k.Id " +
+                     "JOIN Automobili a ON u.AutomobilID = a.Id";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            tableComp.clearTable();
+            while (rs.next()) {
+                tableComp.addRow(new Object[]{
+                    rs.getInt("BrojUgovora"),
+                    rs.getString("Ime") + " " + rs.getString("Prezime"),
+                    rs.getString("Maticni_Broj"),
+                    rs.getString("Model"),
+                    rs.getString("Registracija"),
+                    rs.getDate("DatumSklapanja"),
+                    rs.getDate("PlaniraniDatumVracanja"),
+                    rs.getInt("TroskoviNajma") + " €",
+                    rs.getString("Status")
+                });
+            }
+        } catch (SQLException ex) {
+            logger.log(java.util.logging.Level.SEVERE, "Greška pri učitavanju ugovora", ex);
+        }
     }
 
     /**
@@ -40,7 +99,9 @@ public class ContractsPage extends javax.swing.JFrame {
 
         jLabel4 = new javax.swing.JLabel();
         SideP = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        TableContainer = new javax.swing.JPanel();
+        finalizujBtn = new javax.swing.JButton();
+        produziBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,7 +120,22 @@ public class ContractsPage extends javax.swing.JFrame {
             .addGap(0, 393, Short.MAX_VALUE)
         );
 
-        jLabel1.setText("Ugovori");
+        javax.swing.GroupLayout TableContainerLayout = new javax.swing.GroupLayout(TableContainer);
+        TableContainer.setLayout(TableContainerLayout);
+        TableContainerLayout.setHorizontalGroup(
+            TableContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 751, Short.MAX_VALUE)
+        );
+        TableContainerLayout.setVerticalGroup(
+            TableContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 362, Short.MAX_VALUE)
+        );
+
+        finalizujBtn.setText("Finalizuj");
+        finalizujBtn.addActionListener(this::finalizujBtnActionPerformed);
+
+        produziBtn.setText("Produzi");
+        produziBtn.addActionListener(this::produziBtnActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -70,10 +146,17 @@ public class ContractsPage extends javax.swing.JFrame {
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(377, 377, 377))
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(SideP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(163, 163, 163)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(SideP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(TableContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(341, 341, 341)
+                        .addComponent(finalizujBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(produziBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -85,14 +168,62 @@ public class ContractsPage extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(SideP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(17, 17, 17)
-                        .addComponent(jLabel1)))
-                .addContainerGap(86, Short.MAX_VALUE))
+                        .addComponent(TableContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(finalizujBtn)
+                    .addComponent(produziBtn))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void finalizujBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizujBtnActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tabelaKomponenta.getTable().getSelectedRow();
+
+        // 2. Sigurnosna provera
+        if (selectedRow != -1) {
+            // 3. Uzimanje ID-a iz prve kolone (Broj Ugovora)
+            // Pretpostavljam da je Broj Ugovora u 0. koloni (prva kolona)
+            int idUgovora = (int) tabelaKomponenta.getTable().getValueAt(selectedRow, 0);
+
+            // 4. Otvaranje novog prozora i prosleđivanje ID-a
+            FinalizeContractPage finalizePage = new FinalizeContractPage(idUgovora);
+            finalizePage.setVisible(true);
+            this.dispose();
+            // 5. Opciono: Ako želiš da zatvoriš trenutni prozor kada otvoriš finalizaciju
+            // this.dispose();
+        } else {
+            // Obaveštenje ako nešto nije dobro selektovano
+            javax.swing.JOptionPane.showMessageDialog(this, "Molimo selektujte ugovor iz tabele.");
+        }
+    }//GEN-LAST:event_finalizujBtnActionPerformed
+
+    private void produziBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_produziBtnActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tabelaKomponenta.getTable().getSelectedRow();
+
+        // 2. Sigurnosna provera
+        if (selectedRow != -1) {
+            // 3. Uzimanje ID-a iz prve kolone (Broj Ugovora)
+            // Pretpostavljam da je Broj Ugovora u 0. koloni (prva kolona)
+            int idUgovora = (int) tabelaKomponenta.getTable().getValueAt(selectedRow, 0);
+
+            // 4. Otvaranje novog prozora i prosleđivanje ID-a
+            ExtendContractPage extendPage = new ExtendContractPage(idUgovora);
+            extendPage.setVisible(true);
+            this.dispose();
+            // 5. Opciono: Ako želiš da zatvoriš trenutni prozor kada otvoriš finalizaciju
+            // this.dispose();
+        } else {
+            // Obaveštenje ako nešto nije dobro selektovano
+            javax.swing.JOptionPane.showMessageDialog(this, "Molimo selektujte ugovor iz tabele.");
+        }
+    }//GEN-LAST:event_produziBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -121,7 +252,9 @@ public class ContractsPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel SideP;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel TableContainer;
+    private javax.swing.JButton finalizujBtn;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JButton produziBtn;
     // End of variables declaration//GEN-END:variables
 }

@@ -8,6 +8,7 @@ import mainPages.HomePage;
 import mainPages.CarsPage;
 import mainPages.ClientsPage;
 import mainPages.ContractsPage;
+import mainPages.ReceiptsPage;
 
 /**
  *
@@ -34,6 +35,7 @@ public class SideMenu extends javax.swing.JPanel {
         Automobili.setBackground(defaultColor);
         Klijenti.setBackground(defaultColor);
         Ugovori.setBackground(defaultColor);
+        Racuni.setBackground(defaultColor);
 
         // Postavi svetlo zelenu boju na aktivnu
         switch (activePage) {
@@ -41,6 +43,7 @@ public class SideMenu extends javax.swing.JPanel {
             case "Automobili" -> Automobili.setBackground(activeColor);
             case "Klijenti"   -> Klijenti.setBackground(activeColor);
             case "Ugovori"    -> Ugovori.setBackground(activeColor);
+            case "Racuni"    -> Racuni.setBackground(activeColor);
         }
     }
     /**
@@ -63,6 +66,7 @@ public class SideMenu extends javax.swing.JPanel {
         Automobili = new javax.swing.JLabel();
         Klijenti = new javax.swing.JLabel();
         Ugovori = new javax.swing.JLabel();
+        Racuni = new javax.swing.JLabel();
 
         SideMenu.setBackground(new java.awt.Color(0, 153, 255));
 
@@ -110,17 +114,29 @@ public class SideMenu extends javax.swing.JPanel {
             }
         });
 
+        Racuni.setBackground(new java.awt.Color(0, 0, 0));
+        Racuni.setForeground(new java.awt.Color(255, 255, 255));
+        Racuni.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Racuni.setText("Racuni");
+        Racuni.setOpaque(true);
+        Racuni.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                RacuniMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout SideMenuLayout = new javax.swing.GroupLayout(SideMenu);
         SideMenu.setLayout(SideMenuLayout);
         SideMenuLayout.setHorizontalGroup(
             SideMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SideMenuLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addGroup(SideMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Pocetna, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Automobili, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Ugovori, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Klijenti, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(SideMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(Racuni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Pocetna, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                    .addComponent(Automobili, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                    .addComponent(Ugovori, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                    .addComponent(Klijenti, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE))
                 .addGap(0, 18, Short.MAX_VALUE))
         );
         SideMenuLayout.setVerticalGroup(
@@ -134,7 +150,9 @@ public class SideMenu extends javax.swing.JPanel {
                 .addComponent(Klijenti, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Ugovori, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(151, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Racuni, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(103, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -169,11 +187,18 @@ public class SideMenu extends javax.swing.JPanel {
        navigateTo(new ContractsPage());
     }//GEN-LAST:event_UgovoriMouseClicked
 
+    private void RacuniMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RacuniMouseClicked
+
+       // TODO add your handling code here:
+       navigateTo(new ReceiptsPage());        
+    }//GEN-LAST:event_RacuniMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Automobili;
     private javax.swing.JLabel Klijenti;
     private javax.swing.JLabel Pocetna;
+    private javax.swing.JLabel Racuni;
     private javax.swing.JPanel SideMenu;
     private javax.swing.JLabel Ugovori;
     // End of variables declaration//GEN-END:variables

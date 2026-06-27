@@ -14,61 +14,65 @@ import java.sql.*;
  *
  * @author Administrator
  */
-public class ClientsPage extends javax.swing.JFrame {
+public class ReceiptsPage extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ClientsPage.class.getName());
-
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ReceiptsPage.class.getName());
+    private final CustomTable tabelaRacuna;
     /**
-     * Creates new form Clients
+     * Creates new form Receipt
      */
-    public ClientsPage() {
+    public ReceiptsPage() {
         initComponents();
-        this.setSize(1093, 531);
-        this.setResizable(false);
+        
+        this.setResizable(false); 
         this.setLocationRelativeTo(null);
-        SideMenu menu = new SideMenu("Klijenti");
+        SideMenu menu = new SideMenu("Racuni");
 
         SideP.setLayout(new BorderLayout());
         SideP.add(menu, BorderLayout.CENTER);
+
+        SideP.revalidate();
+        SideP.repaint();
         
-        // Definišemo kolone bez ID-a
-        String[] kolone = {"Ime", "Prezime", "Matični broj", "Telefon", "Email"};
-        CustomTable tabelaKomponenta = new CustomTable(kolone);
+        String[] kolone = {"Broj Računa", "Klijent", "Matični Broj", "Model", "Registracija", "Početak", "Kraj", "Iznos"};
+        tabelaRacuna = new CustomTable(kolone);
 
         TableContainer.setLayout(new BorderLayout());
-        TableContainer.add(tabelaKomponenta, BorderLayout.CENTER);
+        TableContainer.add(tabelaRacuna, BorderLayout.CENTER);
 
-        TableContainer.revalidate();
-        TableContainer.repaint();
-        
-        loadKlijenti(tabelaKomponenta);
+        loadRacuni();
     }
     
-    private void loadKlijenti(CustomTable tableComp) {
-        // SQL upit bez ID kolone
-        String sql = "SELECT Ime, Prezime, Maticni_Broj, Telefon, Email FROM klijenti";
-        
+    private void loadRacuni() {
+        String sql = "SELECT r.BrojRacuna, k.Ime, k.Prezime, k.Maticni_Broj, a.Model, a.Registracija, " +
+                     "u.DatumSklapanja, u.PlaniraniDatumVracanja, r.UkupanIznos " +
+                     "FROM Racuni r " +
+                     "JOIN Ugovori u ON r.BrojUgovora = u.BrojUgovora " +
+                     "JOIN Klijenti k ON u.KlijentID = k.Id " +
+                     "JOIN Automobili a ON u.AutomobilID = a.Id";
+
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
-            tableComp.clearTable(); 
-
+            tabelaRacuna.clearTable();
             while (rs.next()) {
-                tableComp.addRow(new Object[]{
-                    rs.getString("Ime"),
-                    rs.getString("Prezime"),
+                tabelaRacuna.addRow(new Object[]{
+                    rs.getInt("BrojRacuna"),
+                    rs.getString("Ime") + " " + rs.getString("Prezime"),
                     rs.getString("Maticni_Broj"),
-                    rs.getString("Telefon"),
-                    rs.getString("Email")
+                    rs.getString("Model"),
+                    rs.getString("Registracija"),
+                    rs.getDate("DatumSklapanja"),
+                    rs.getDate("PlaniraniDatumVracanja"),
+                    rs.getDouble("UkupanIznos") + " €"
                 });
             }
         } catch (SQLException ex) {
-            logger.log(java.util.logging.Level.SEVERE, "Greška pri učitavanju klijenata", ex);
+            logger.log(java.util.logging.Level.SEVERE, "Greška pri učitavanju računa", ex);
         }
     }
 
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -78,82 +82,70 @@ public class ClientsPage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel4 = new javax.swing.JLabel();
         SideP = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
         TableContainer = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("RENT A CAR");
 
         javax.swing.GroupLayout SidePLayout = new javax.swing.GroupLayout(SideP);
         SideP.setLayout(SidePLayout);
         SidePLayout.setHorizontalGroup(
             SidePLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 233, Short.MAX_VALUE)
+            .addGap(0, 239, Short.MAX_VALUE)
         );
         SidePLayout.setVerticalGroup(
             SidePLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 370, Short.MAX_VALUE)
+            .addGap(0, 372, Short.MAX_VALUE)
         );
 
-        jButton1.setText("Unesi");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("RENT A CAR");
 
         javax.swing.GroupLayout TableContainerLayout = new javax.swing.GroupLayout(TableContainer);
         TableContainer.setLayout(TableContainerLayout);
         TableContainerLayout.setHorizontalGroup(
             TableContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 799, Short.MAX_VALUE)
+            .addGap(0, 751, Short.MAX_VALUE)
         );
         TableContainerLayout.setVerticalGroup(
             TableContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 344, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(SideP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(TableContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(44, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(350, 350, 350))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(151, 151, 151))))
+                .addContainerGap(377, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(365, 365, 365))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(SideP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(TableContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addGap(13, 13, 13)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(SideP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TableContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addGap(49, 49, 49))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(SideP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(TableContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -177,13 +169,12 @@ public class ClientsPage extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ClientsPage().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new ReceiptsPage().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel SideP;
     private javax.swing.JPanel TableContainer;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
 }

@@ -26,24 +26,43 @@
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="286" max="-2" attributes="0"/>
-                      <Component id="jLabel4" min="-2" pref="309" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                       <Component id="Back" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="268" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel2" min="-2" pref="37" max="-2" attributes="0"/>
-                          <Component id="jLabel1" min="-2" pref="113" max="-2" attributes="0"/>
-                          <Component id="jLabel3" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
-                          <Component id="jLabel5" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="221" max="-2" attributes="0"/>
+                      <Component id="jLabel4" min="-2" pref="309" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace min="-2" pref="193" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="268" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="jButton1" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel3" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel5" alignment="0" pref="98" max="32767" attributes="0"/>
+                          <Component id="jLabel6" max="32767" attributes="0"/>
+                          <Component id="jLabel7" max="32767" attributes="0"/>
+                          <Component id="jLabel8" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="MarkaTxt" max="32767" attributes="0"/>
+                          <Component id="KategorijaTxt" max="32767" attributes="0"/>
+                          <Component id="GodisteTxt" alignment="0" max="32767" attributes="0"/>
+                          <Component id="RegistracijaTxt" max="32767" attributes="0"/>
+                          <Component id="KilometrazaTxt" max="32767" attributes="0"/>
+                          <Component id="BojaTxt" pref="121" max="32767" attributes="0"/>
+                          <Component id="CenaTxt" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="288" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -54,14 +73,43 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="Back" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-              <Component id="jLabel1" min="-2" pref="28" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel1" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                  <Component id="MarkaTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="KategorijaTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                  <Component id="GodisteTxt" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="CenaTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="KilometrazaTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="BojaTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                  <Component id="RegistracijaTxt" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="48" max="32767" attributes="0"/>
+              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-              <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="204" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -78,28 +126,71 @@
     </Component>
     <Component class="javax.swing.JButton" name="Back">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Go back"/>
+        <Property name="text" type="java.lang.String" value="&lt;- Nazad"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BackActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Marka"/>
+        <Property name="text" type="java.lang.String" value="Marka :"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel2"/>
+        <Property name="text" type="java.lang.String" value="Kategorija :"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel3"/>
+        <Property name="text" type="java.lang.String" value="Godiste :"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel5"/>
+        <Property name="text" type="java.lang.String" value="Cena po danu:"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel6">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Kilometraza:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel7">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Boja:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel8">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Registracija:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="MarkaTxt">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MarkaTxtActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="KategorijaTxt">
+    </Component>
+    <Component class="javax.swing.JTextField" name="GodisteTxt">
+    </Component>
+    <Component class="javax.swing.JTextField" name="CenaTxt">
+    </Component>
+    <Component class="javax.swing.JTextField" name="KilometrazaTxt">
+    </Component>
+    <Component class="javax.swing.JTextField" name="RegistracijaTxt">
+    </Component>
+    <Component class="javax.swing.JTextField" name="BojaTxt">
+    </Component>
+    <Component class="javax.swing.JButton" name="jButton1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Unesi"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
