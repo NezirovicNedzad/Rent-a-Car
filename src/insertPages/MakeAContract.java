@@ -154,6 +154,7 @@ public class MakeAContract extends javax.swing.JFrame {
         jLabel4.setText("RENT A CAR");
 
         jButton1.setText("<- Nazad");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         datumVracanja.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
 
@@ -448,6 +449,13 @@ public class MakeAContract extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Greška: " + e.getMessage());
         }  
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        HomePage home = new HomePage();
+        home.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

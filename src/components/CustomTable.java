@@ -80,4 +80,8 @@ public class CustomTable extends JPanel {
     public boolean isCellEditable(int row, int column) {
         return false; // 🚫 sve zabranjeno editovanje
     }
+    
+    public javax.swing.JTable getTable() {
+        return this.table; // Pretpostavljam da se tvoja interna JTable varijabla zove 'table'
+    }
 }
