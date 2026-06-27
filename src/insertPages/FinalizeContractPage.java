@@ -13,16 +13,16 @@ import db.DBConnection;
 import java.sql.*;
 import mainPages.ContractsPage;
 
-public class FinalizeContract extends javax.swing.JFrame {
+public class FinalizeContractPage extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FinalizeContract.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FinalizeContractPage.class.getName());
     private int IdUgovora;
 
     /**
      * Creates new form FinalizeContract
      * @param IdUgovora
      */
-    public FinalizeContract(int IdUgovora) {
+    public FinalizeContractPage(int IdUgovora) {
         initComponents();
         this.setResizable(false); 
         this.setLocationRelativeTo(null);
@@ -32,7 +32,7 @@ public class FinalizeContract extends javax.swing.JFrame {
         osveziUkupnuCenu();
     }
     
-    public FinalizeContract() {
+    public FinalizeContractPage() {
         initComponents();
         this.setResizable(false); 
         this.setLocationRelativeTo(null);
@@ -297,51 +297,71 @@ public class FinalizeContract extends javax.swing.JFrame {
 
     private void finalizujBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizujBtnActionPerformed
         // TODO add your handling code here:
-        try (Connection con = DBConnection.getConnection()) {
-            // 1. Dobijamo trenutnu cenu
-            String sqlSelect = "SELECT TroskoviNajma FROM Ugovori WHERE BrojUgovora = ?";
-            PreparedStatement psSelect = con.prepareStatement(sqlSelect);
-            psSelect.setInt(1, this.IdUgovora);
-            ResultSet rs = psSelect.executeQuery();
+     try (Connection con = DBConnection.getConnection()) {
+        // Isključujemo auto-commit radi sigurnosti transakcije
+        con.setAutoCommit(false);
 
-            double trenutnaCena = 0;
-            if (rs.next()) {
-                trenutnaCena = rs.getDouble("TroskoviNajma");
-            }
+        // 1. Dobijamo trenutnu cenu i AutomobilID iz ugovora
+        String sqlSelect = "SELECT TroskoviNajma, AutomobilID FROM Ugovori WHERE BrojUgovora = ?";
+        PreparedStatement psSelect = con.prepareStatement(sqlSelect);
+        psSelect.setInt(1, this.IdUgovora);
+        ResultSet rs = psSelect.executeQuery();
 
-            // 2. Kalkulacija finalne cene
-            double trosakOstecenja = 0;
-            if (chckOstecenje.isSelected()) {
+        double trenutnaCena = 0;
+        int automobilID = -1;
+        if (rs.next()) {
+            trenutnaCena = rs.getDouble("TroskoviNajma");
+            automobilID = rs.getInt("AutomobilID");
+        }
+
+        // 2. Kalkulacija finalne cene
+        double trosakOstecenja = 0;
+        if (chckOstecenje.isSelected()) {
+            try {
                 trosakOstecenja = Double.parseDouble(TroskoviOstecenja.getText());
+            } catch (NumberFormatException e) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Unesite validan broj za troškove oštećenja!");
+                return;
             }
-            double finalnaCena = trenutnaCena + trosakOstecenja;
+        }
+        double finalnaCena = trenutnaCena + trosakOstecenja;
 
-            // 3. UPDATE statusa i finalne cene u Ugovorima
-            String sqlUpdate = "UPDATE Ugovori SET TroskoviNajma = ?, Status = 'Zatvoren' WHERE BrojUgovora = ?";
-            PreparedStatement psUpdate = con.prepareStatement(sqlUpdate);
-            psUpdate.setDouble(1, finalnaCena);
-            psUpdate.setInt(2, this.IdUgovora);
-            psUpdate.executeUpdate();
+        // 3. UPDATE ugovora (zatvaranje i finalna cena)
+        String sqlUpdate = "UPDATE Ugovori SET TroskoviNajma = ?, Status = 'Zatvoren' WHERE BrojUgovora = ?";
+        PreparedStatement psUpdate = con.prepareStatement(sqlUpdate);
+        psUpdate.setDouble(1, finalnaCena);
+        psUpdate.setInt(2, this.IdUgovora);
+        psUpdate.executeUpdate();
 
-            // 4. INSERT u tabelu Racun
-            // Pretpostavljam da DatumIzdavanja treba biti današnji datum
-            String sqlRacun = "INSERT INTO Racuni (BrojUgovora, DatumIzdavanja, UkupanIznos) VALUES (?, ?, ?)";
-            PreparedStatement psRacun = con.prepareStatement(sqlRacun);
-            psRacun.setInt(1, this.IdUgovora);
-            psRacun.setDate(2, new java.sql.Date(System.currentTimeMillis())); // Trenutni datum
-            psRacun.setDouble(3, finalnaCena);
-            psRacun.executeUpdate();
+        // 4. UPDATE statusa automobila koristeći AutomobilID
+        if (automobilID != -1) {
+            String sqlAuto = "UPDATE Automobili SET Status = 'Slobodan' WHERE Id = ?"; // Pretpostavljam da je ključ u Automobili tabeli 'Id'
+            PreparedStatement psAuto = con.prepareStatement(sqlAuto);
+            psAuto.setInt(1, automobilID);
+            psAuto.executeUpdate();
+        }
 
+        // 5. INSERT u tabelu Racuni
+        String sqlRacun = "INSERT INTO Racuni (BrojUgovora, DatumIzdavanja, UkupanIznos) VALUES (?, ?, ?)";
+        PreparedStatement psRacun = con.prepareStatement(sqlRacun);
+        psRacun.setInt(1, this.IdUgovora);
+        psRacun.setDate(2, new java.sql.Date(System.currentTimeMillis()));
+        psRacun.setDouble(3, finalnaCena);
+        psRacun.executeUpdate();
 
-            javax.swing.JOptionPane.showMessageDialog(this, "Ugovor zatvoren i račun kreiran. Finalna cena: " + finalnaCena + " €");
-            ContractsPage contracts = new ContractsPage();
-            contracts.setVisible(true);
-            this.dispose();
+        // Potvrđujemo sve promene
+        con.commit();
 
-        } catch (SQLException | NumberFormatException ex) {
-            logger.log(java.util.logging.Level.SEVERE, "Greška pri finalizaciji", ex);
-            javax.swing.JOptionPane.showMessageDialog(this, "Greška: Proverite ispravnost unosa.");
-        }    
+        javax.swing.JOptionPane.showMessageDialog(this, "Ugovor finalizovan! Automobil je sada slobodan.");
+        
+        mainPages.ContractsPage contracts = new mainPages.ContractsPage();
+        contracts.setVisible(true);
+        this.dispose();
+
+    } catch (SQLException ex) {
+        logger.log(java.util.logging.Level.SEVERE, "Greška pri finalizaciji ugovora", ex);
+        javax.swing.JOptionPane.showMessageDialog(this, "Došlo je do greške u bazi podataka!");
+    }
     }//GEN-LAST:event_finalizujBtnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -373,7 +393,7 @@ public class FinalizeContract extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FinalizeContract().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new FinalizeContractPage().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -4,6 +4,12 @@
  */
 package insertPages;
 
+import db.DBConnection;
+import javax.swing.JOptionPane;
+import java.sql.*;
+import mainPages.CarsPage;
+import session.Session;
+
 /**
  *
  * @author Administrator
@@ -17,6 +23,8 @@ public class InsertCarsPage extends javax.swing.JFrame {
      */
     public InsertCarsPage() {
         initComponents();
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -34,6 +42,17 @@ public class InsertCarsPage extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        MarkaTxt = new javax.swing.JTextField();
+        KategorijaTxt = new javax.swing.JTextField();
+        GodisteTxt = new javax.swing.JTextField();
+        CenaTxt = new javax.swing.JTextField();
+        KilometrazaTxt = new javax.swing.JTextField();
+        RegistracijaTxt = new javax.swing.JTextField();
+        BojaTxt = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -41,15 +60,27 @@ public class InsertCarsPage extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("RENT A CAR");
 
-        Back.setText("Go back");
+        Back.setText("<- Nazad");
+        Back.addActionListener(this::BackActionPerformed);
 
-        jLabel1.setText("Marka");
+        jLabel1.setText("Marka :");
 
-        jLabel2.setText("jLabel2");
+        jLabel2.setText("Kategorija :");
 
-        jLabel3.setText("jLabel3");
+        jLabel3.setText("Godiste :");
 
-        jLabel5.setText("jLabel5");
+        jLabel5.setText("Cena po danu:");
+
+        jLabel6.setText("Kilometraza:");
+
+        jLabel7.setText("Boja:");
+
+        jLabel8.setText("Registracija:");
+
+        MarkaTxt.addActionListener(this::MarkaTxtActionPerformed);
+
+        jButton1.setText("Unesi");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -58,19 +89,35 @@ public class InsertCarsPage extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(286, 286, 286)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(37, 37, 37)
                         .addComponent(Back))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(268, 268, 268)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(288, Short.MAX_VALUE))
+                        .addGap(221, 221, 221)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(193, 193, 193))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(268, 268, 268)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(MarkaTxt)
+                            .addComponent(KategorijaTxt)
+                            .addComponent(GodisteTxt)
+                            .addComponent(RegistracijaTxt)
+                            .addComponent(KilometrazaTxt)
+                            .addComponent(BojaTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                            .addComponent(CenaTxt))))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -79,18 +126,148 @@ public class InsertCarsPage extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Back)
                 .addGap(26, 26, 26)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(MarkaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(32, 32, 32)
-                .addComponent(jLabel3)
-                .addGap(30, 30, 30)
-                .addComponent(jLabel5)
-                .addGap(0, 204, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(KategorijaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(GodisteTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(CenaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(KilometrazaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(BojaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
+                    .addComponent(RegistracijaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(30, 30, 30))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void MarkaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MarkaTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_MarkaTxtActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String marka = MarkaTxt.getText().trim();
+        String kategorija = KategorijaTxt.getText().trim();
+        String godisteStr = GodisteTxt.getText().trim();
+        String cenaStr = CenaTxt.getText().trim();
+        String kilometrazaStr = KilometrazaTxt.getText().trim();
+        String boja = BojaTxt.getText().trim();
+        String registracija = RegistracijaTxt.getText().trim();
+
+        // 2. Osnovna validacija
+        if (marka.isEmpty() || kategorija.isEmpty() || godisteStr.isEmpty() || 
+            cenaStr.isEmpty() || kilometrazaStr.isEmpty() || boja.isEmpty() || registracija.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Molimo popunite sva polja!");
+            return;
+        }
+        
+        String regexRegistracija = "^[A-Z]{2}-\\d{3}-[A-Z]{2}$";
+    
+        if (!registracija.matches(regexRegistracija)) {
+            JOptionPane.showMessageDialog(this, "Format registracije nije ispravan!\nMolimo koristite format: NP-123-AA");
+            return;
+        }
+        
+        String sqlCheck = "SELECT Registracija FROM Automobili WHERE Registracija = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement psCheck = con.prepareStatement(sqlCheck)) {
+
+            psCheck.setString(1, registracija);
+            try (ResultSet rs = psCheck.executeQuery()) {
+                if (rs.next()) {
+                    JOptionPane.showMessageDialog(this, "Automobil sa ovom registracijom već postoji u bazi!");
+                    return; // Prekida dalje izvršavanje
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(java.util.logging.Level.SEVERE, "Greška pri proveri registracije", ex);
+            JOptionPane.showMessageDialog(this, "Greška pri proveri baze podataka.");
+            return;
+        }
+        
+
+        try {
+            int godiste = Integer.parseInt(godisteStr);
+            double cena = Double.parseDouble(cenaStr);
+            int kilometraza = Integer.parseInt(kilometrazaStr);
+
+            // Dodatna validacija za godinu
+            if (godiste < 1900 || godiste > 2026) {
+                JOptionPane.showMessageDialog(this, "Unesite validno godište!");
+                return;
+            }
+
+            // 3. SQL Insert
+            // Status je fiksno 'Slobodan', SluzbenikId uzimamo iz sesije
+            String sql = "INSERT INTO Automobili (Model, Kategorija, Godiste, CenaPoDanu, Kilometraza, Boja, Registracija, Status, SluzbenikId) VALUES (?, ?, ?, ?, ?, ?, ?, 'Slobodan', ?)";
+
+            try (Connection con = DBConnection.getConnection();
+                 PreparedStatement ps = con.prepareStatement(sql)) {
+
+                ps.setString(1, marka);
+                ps.setString(2, kategorija);
+                ps.setInt(3, godiste);
+                ps.setDouble(4, cena);
+                ps.setInt(5, kilometraza);
+                ps.setString(6, boja);
+                ps.setString(7, registracija);
+                // Pretpostavka da tvoja Session klasa ima metodu getId()
+                ps.setInt(8, Session.id); 
+
+                ps.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "Automobil uspešno dodat!");
+
+                // Opciono: Očisti polja nakon unosa
+                MarkaTxt.setText("");
+                KategorijaTxt.setText("");
+                GodisteTxt.setText("");
+                CenaTxt.setText("");
+                KilometrazaTxt.setText("");
+                BojaTxt.setText("");
+                RegistracijaTxt.setText("");
+                // ... očisti ostala polja
+                
+                CarsPage cars = new CarsPage();
+                cars.setVisible(true);
+                this.dispose();
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Godište, cena i kilometraža moraju biti brojevi!");
+        } catch (SQLException ex) {
+            logger.log(java.util.logging.Level.SEVERE, "Greška pri unosu automobila", ex);
+            JOptionPane.showMessageDialog(this, "Greška pri komunikaciji sa bazom: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
+        // TODO add your handling code here
+        CarsPage cars = new CarsPage();
+        cars.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_BackActionPerformed
 
     /**
      * @param args the command line arguments
@@ -119,10 +296,21 @@ public class InsertCarsPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Back;
+    private javax.swing.JTextField BojaTxt;
+    private javax.swing.JTextField CenaTxt;
+    private javax.swing.JTextField GodisteTxt;
+    private javax.swing.JTextField KategorijaTxt;
+    private javax.swing.JTextField KilometrazaTxt;
+    private javax.swing.JTextField MarkaTxt;
+    private javax.swing.JTextField RegistracijaTxt;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     // End of variables declaration//GEN-END:variables
 }

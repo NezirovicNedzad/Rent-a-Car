@@ -7,7 +7,8 @@ package mainPages;
 import components.CustomTable;
 import components.SideMenu;
 import db.DBConnection;
-import insertPages.FinalizeContract;
+import insertPages.ExtendContractPage;
+import insertPages.FinalizeContractPage;
 import java.awt.BorderLayout;
 import java.sql.*;
 
@@ -134,6 +135,7 @@ public class ContractsPage extends javax.swing.JFrame {
         finalizujBtn.addActionListener(this::finalizujBtnActionPerformed);
 
         produziBtn.setText("Produzi");
+        produziBtn.addActionListener(this::produziBtnActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -190,7 +192,7 @@ public class ContractsPage extends javax.swing.JFrame {
             int idUgovora = (int) tabelaKomponenta.getTable().getValueAt(selectedRow, 0);
 
             // 4. Otvaranje novog prozora i prosleđivanje ID-a
-            FinalizeContract finalizePage = new FinalizeContract(idUgovora);
+            FinalizeContractPage finalizePage = new FinalizeContractPage(idUgovora);
             finalizePage.setVisible(true);
             this.dispose();
             // 5. Opciono: Ako želiš da zatvoriš trenutni prozor kada otvoriš finalizaciju
@@ -200,6 +202,28 @@ public class ContractsPage extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Molimo selektujte ugovor iz tabele.");
         }
     }//GEN-LAST:event_finalizujBtnActionPerformed
+
+    private void produziBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_produziBtnActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tabelaKomponenta.getTable().getSelectedRow();
+
+        // 2. Sigurnosna provera
+        if (selectedRow != -1) {
+            // 3. Uzimanje ID-a iz prve kolone (Broj Ugovora)
+            // Pretpostavljam da je Broj Ugovora u 0. koloni (prva kolona)
+            int idUgovora = (int) tabelaKomponenta.getTable().getValueAt(selectedRow, 0);
+
+            // 4. Otvaranje novog prozora i prosleđivanje ID-a
+            ExtendContractPage extendPage = new ExtendContractPage(idUgovora);
+            extendPage.setVisible(true);
+            this.dispose();
+            // 5. Opciono: Ako želiš da zatvoriš trenutni prozor kada otvoriš finalizaciju
+            // this.dispose();
+        } else {
+            // Obaveštenje ako nešto nije dobro selektovano
+            javax.swing.JOptionPane.showMessageDialog(this, "Molimo selektujte ugovor iz tabele.");
+        }
+    }//GEN-LAST:event_produziBtnActionPerformed
 
     /**
      * @param args the command line arguments

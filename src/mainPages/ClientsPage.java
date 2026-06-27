@@ -4,8 +4,11 @@
  */
 package mainPages;
 
+import components.CustomTable;
 import components.SideMenu;
+import db.DBConnection;
 import java.awt.BorderLayout;
+import java.sql.*;
 
 /**
  *
@@ -20,15 +23,52 @@ public class ClientsPage extends javax.swing.JFrame {
      */
     public ClientsPage() {
         initComponents();
-        this.setSize(1093, 501);
+        this.setSize(1093, 531);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         SideMenu menu = new SideMenu("Klijenti");
 
         SideP.setLayout(new BorderLayout());
         SideP.add(menu, BorderLayout.CENTER);
+        
+        // Definišemo kolone bez ID-a
+        String[] kolone = {"Ime", "Prezime", "Matični broj", "Telefon", "Email"};
+        CustomTable tabelaKomponenta = new CustomTable(kolone);
+
+        TableContainer.setLayout(new BorderLayout());
+        TableContainer.add(tabelaKomponenta, BorderLayout.CENTER);
+
+        TableContainer.revalidate();
+        TableContainer.repaint();
+        
+        loadKlijenti(tabelaKomponenta);
+    }
+    
+    private void loadKlijenti(CustomTable tableComp) {
+        // SQL upit bez ID kolone
+        String sql = "SELECT Ime, Prezime, Maticni_Broj, Telefon, Email FROM klijenti";
+        
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            tableComp.clearTable(); 
+
+            while (rs.next()) {
+                tableComp.addRow(new Object[]{
+                    rs.getString("Ime"),
+                    rs.getString("Prezime"),
+                    rs.getString("Maticni_Broj"),
+                    rs.getString("Telefon"),
+                    rs.getString("Email")
+                });
+            }
+        } catch (SQLException ex) {
+            logger.log(java.util.logging.Level.SEVERE, "Greška pri učitavanju klijenata", ex);
+        }
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -40,6 +80,8 @@ public class ClientsPage extends javax.swing.JFrame {
 
         jLabel4 = new javax.swing.JLabel();
         SideP = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        TableContainer = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,18 +100,39 @@ public class ClientsPage extends javax.swing.JFrame {
             .addGap(0, 370, Short.MAX_VALUE)
         );
 
+        jButton1.setText("Unesi");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
+        javax.swing.GroupLayout TableContainerLayout = new javax.swing.GroupLayout(TableContainer);
+        TableContainer.setLayout(TableContainerLayout);
+        TableContainerLayout.setHorizontalGroup(
+            TableContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 799, Short.MAX_VALUE)
+        );
+        TableContainerLayout.setVerticalGroup(
+            TableContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(434, Short.MAX_VALUE)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(350, 350, 350))
             .addGroup(layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addComponent(SideP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(TableContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(44, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(350, 350, 350))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(151, 151, 151))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -77,12 +140,20 @@ public class ClientsPage extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(SideP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(SideP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TableContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addGap(49, 49, 49))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -111,6 +182,8 @@ public class ClientsPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel SideP;
+    private javax.swing.JPanel TableContainer;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
 }
